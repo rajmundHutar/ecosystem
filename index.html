@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="author" content="Jaroslav Rája Hutař">
+    <link rel="stylesheet" type="text/css" href="./style.css">
+    <script type="text/javascript" src="./jquery-1.6.2.min.js"></script>
+    <title>Ekosystém</title>
+</head>
+<body onLoad="new_game()">
+<script language="javascript" type="text/javascript">
+	var rok = 0;
+	var obdobi = 0;
+	var g_cas = 0;
+	var obdobi_name = new Array("Jaro", "Léto", "Podzim", "Zima");
+	var koef = new Array("rasa", "perl", "beli", "stik", "koma", "zaba", "cap", "oris", "veve", "kuna");
+	koef["rasa"] = new Array(4, 6, 3, 3);
+	koef["perl"] = new Array(4, 6, 4, 4);
+	koef["beli"] = new Array(3, 2, 1, 1);
+	koef["stik"] = new Array(1, 2, 2, 1);
+
+	koef["koma"] = new Array(4, 5, 2, 0);
+	koef["zaba"] = new Array(2, 2, 2, 1);
+	koef["cap"] = new Array(3, 1, 0, 0);
+
+	koef["oris"] = new Array(0, 2, 4, 3);
+	koef["veve"] = new Array(2, 2, 1, 1);
+	koef["kuna"] = new Array(2, 2, 1, 1);
+
+	var onload_time = "0:10";
+	var timer;
+
+	$(document).ready(function () {
+		$("DIV#help").hide();
+		$("SPAN#close_help").hover(function () {
+			$(this).css("background-color", "white");
+			$(this).css("color", "black");
+			$(this).css("cursor", "pointer");
+		}, function () {
+			$(this).css("background-color", "rgb(15,15,15)");
+			$(this).css("color", "white");
+		}).click(function () {
+			$("DIV#help").hide(500);
+		});
+	});
+
+	function show_help() {
+		$("DIV#help").show(500);
+	}
+
+	function getCoef(animal, obdobi) {
+		return koef[animal][(obdobi - 1) % 4];
+	}
+
+	function getObdobi() {
+		return rok + ". rok<br>" + obdobi_name[((obdobi - 1) % 4)];
+	}
+
+	function setObdobi() {
+		obdobi++;
+		if (obdobi % 4 == 1)
+			rok++;
+	}
+
+	function start_time() {
+		$("#start_" + rok).hide(300);
+		$("#napoveda").hide(300);
+		var date = new Date();
+		g_cas = Math.floor(date.getTime() / 1000);
+		timer = setInterval("coutdown()", 200);
+	}
+
+	function coutdown() {
+		var date = new Date();
+		var now_cas = Math.floor(date.getTime() / 1000) - g_cas;
+		//onload_time.
+		var onload_min = parseFloat(onload_time.split(":")[0]);
+		var onload_sec = parseFloat(onload_time.split(":")[1]);
+		var onload_celk = onload_min * 60 + onload_sec;
+		var vys_time = onload_celk - now_cas;
+
+		var min = Math.floor(vys_time / 60);
+		var sec = vys_time % 60;
+
+		//$("#time_"+rok+"x"+obdobi).html(onload_celk - now_cas);
+		$("#time_" + rok + "x" + obdobi).html(min + ":" + (sec < 10 ? "0" + sec : sec));
+		if (now_cas == onload_celk) {
+			clearInterval(timer);
+			if (obdobi % 4 != 0) {
+				new_game();
+				start_time();
+			} else {
+				$("#plocha").prepend("<TR><TD colspan=\"17\"><hr></TD></TR>");
+				new_game();
+				alert("Konec roku " + (rok - 1));
+				$("#body_" + (obdobi - 1)).append('<input type="button" onClick="end_game()" value="Spočítej body">');
+
+			}
+		}
+	}
+
+	function add(id, time, much) {
+		var pocet = parseFloat($("#" + id + "_" + time).html());
+		//alert(pocet+" "+id+time);
+		pocet += much;
+		$("#" + id + "_" + time).html(pocet);
+	}
+
+	function rem(id, time, much) {
+		var pocet = parseFloat($("#" + id + "_" + time).html());
+		pocet -= much;
+		if (pocet < 0)
+			pocet = 0;
+		$("#" + id + "_" + time).html(pocet);
+	}
+
+	//end_game();
+	function end_game() {
+		var now_year = rok - 1;
+		var rasa = 0;
+		var rasa_next = 0;
+		var perl = 0;
+		var perl_next = 0;
+		var beli = 0;
+		var beli_next = 0;
+		var stik = 0;
+
+		var koma = 0;
+		var koma_next = 0;
+		var zaba = 0;
+		var zaba_next = 0;
+		var cap = 0;
+
+		var oris = 0;
+		var oris_next = 0;
+		var veve = 0;
+		var veve_next = 0;
+		var kuna = 0;
+
+		var i = obdobi - 1;
+		rasa += parseFloat($("#rasa_" + now_year + "x" + i).html());
+		perl += parseFloat($("#perl_" + now_year + "x" + i).html());
+		beli += parseFloat($("#beli_" + now_year + "x" + i).html());
+		stik += parseFloat($("#stik_" + now_year + "x" + i).html());
+		koma += parseFloat($("#koma_" + now_year + "x" + i).html());
+		zaba += parseFloat($("#zaba_" + now_year + "x" + i).html());
+		cap += parseFloat($("#cap_" + now_year + "x" + i).html());
+		oris += parseFloat($("#oris_" + now_year + "x" + i).html());
+		veve += parseFloat($("#veve_" + now_year + "x" + i).html());
+		kuna += parseFloat($("#kuna_" + now_year + "x" + i).html());
+
+		perl = Math.min(Math.floor(rasa / 2), perl);
+		beli = Math.min(Math.floor(perl / 2), beli);
+		stik = Math.min(Math.floor(beli / 2), stik);
+		rasa_next = rasa - perl * 2;
+		perl_next = perl - beli * 2;
+		beli_next = beli - stik * 2;
+		zaba = Math.min(Math.floor(koma / 2), zaba);
+		cap = Math.min(Math.floor(zaba / 2), cap);
+		koma_next = koma - zaba * 2;
+		zaba_next = zaba - cap * 2;
+		veve = Math.min(Math.floor(oris / 2), veve);
+		kuna = Math.min(Math.floor(veve / 2), kuna);
+		oris_next = oris - veve * 2;
+		veve_next = veve - kuna * 2;
+
+		var body = (stik * 9) + (cap * 5) + (kuna * 5);
+
+		var prvni_eko = "Uloveno Štik: " + stik + "\nZbývá " + (beli_next ? " Bělic: " + beli_next : "") + (perl_next ? " Perlooček: " + perl_next : "") + (rasa_next ? " Řas: " + rasa_next : "");
+		var druhy_eko = "Uloveno Čápů: " + cap + "\nZbývá " + (zaba_next ? " Žab: " + zaba_next : "") + (koma_next ? " Komárů " + koma_next : "")
+		var treti_eko = "Uloveno Kun: " + kuna + "\nZbývá " + (veve_next ? " Veverek: " + veve_next : "") + (oris_next ? " Oříšků " + oris_next : "")
+
+		alert(prvni_eko);
+		alert(druhy_eko);
+		alert(treti_eko);
+
+		$("#rasa_" + rok + "x" + obdobi).html(rasa_next);
+		$("#perl_" + rok + "x" + obdobi).html(perl_next);
+		$("#beli_" + rok + "x" + obdobi).html(beli_next);
+
+		$("#koma_" + rok + "x" + obdobi).html(koma_next);
+		$("#zaba_" + rok + "x" + obdobi).html(zaba_next);
+
+		$("#oris_" + rok + "x" + obdobi).html(oris_next);
+		$("#veve_" + rok + "x" + obdobi).html(veve_next);
+
+		$("#body_" + (obdobi - 1)).html("<DIV class=\"poznamka\" style=\"text-align:left;\">" + prvni_eko + "<br>" + druhy_eko + "<br>" + treti_eko + "</DIV><SPAN id=\"bodiky_" + (obdobi - 1) + "\">Body: " + body);
+
+		var celk = 0;
+		for (var i = 4; i < obdobi; i += 4) {
+			var temp = $("#bodiky_" + i).html();
+			alert(temp);
+			if (temp != "")
+				celk += parseFloat(temp.split(":")[1]);
+		}
+		alert("CELKEM BODŮ: " + celk);
+	}
+
+	function printRadek(name, popis) {
+		var coef = getCoef(popis, obdobi);
+		var text = ('<TD  class="o_name">' + name + ' <SPAN class="coef_poz">(' + coef + 'x)</SPAN> </TD>');
+		text += ('<TD class="o_pocet" id="' + popis + '_' + rok + 'x' + obdobi + '" class="o_pocet">0</TD>');
+		text += ('<TD class="o_buttons">');
+		text += ('<input type="button" value="+1" onClick="add(\'' + popis + '\',\'' + rok + 'x' + obdobi + '\',1)">');
+		text += ('<input type="button" class="button_big" value="+' + coef + '" onClick="add(\'' + popis + '\',\'' + rok + 'x' + obdobi + '\',' + coef + ')">');
+		text += ('<Input type="button" value="-' + coef + '" onClick="rem(\'' + popis + '\',\'' + rok + 'x' + obdobi + '\',' + coef + ')">');
+		text += ('<input type="button" value="-1" onClick="rem(\'' + popis + '\',\'' + rok + 'x' + obdobi + '\',1)">');
+		text += ('</TD>');
+		return text;
+	}
+
+	function new_game() {
+		setObdobi();
+		var text;
+		text = ('<TR>');
+		text += ('<TD rowspan="3" align="center" class="o_' + (obdobi_name[(obdobi - 1) % 4]) + '">' + getObdobi() + '</TD>');
+		text += ('<TD rowspan="3" align="center" class="o_cas">Čas<br><SPAN id="time_' + rok + 'x' + obdobi + '">' + onload_time + '</SPAN></TD>');
+
+		text += printRadek("Řasa", "rasa");
+		text += printRadek("Perloočko", "perl");
+		text += printRadek("Bělice", "beli");
+		text += printRadek("Štika", "stik");
+
+		text += ('</TR><TR>');
+
+		text += printRadek("Komár", "koma");
+		text += printRadek("Žába", "zaba");
+		text += printRadek("Čáp", "cap");
+
+		text += ('<TD colspan="3" rowspan="2" id="body_' + obdobi + '" class="o_body">' + (obdobi % 4 == 1 ? '<input type="button" value="Start" id="start_' + rok + '" onCLick="start_time()"><input type="button" value="Nápověda" id="napoveda" onCLick="show_help()">' : '') + '</TD>');
+		text += ('</TR><TR>');
+
+		text += printRadek("Oříšek", "oris");
+		text += printRadek("Veverka", "veve");
+		text += printRadek("Kuna", "kuna");
+
+		text += ('</TR>');
+
+		if (obdobi % 4 != 1)
+			text += "<TR><TD colspan=\"17\" style=\"border:1px solid black\"></TD></TR>";
+
+		$("#plocha").prepend(text);
+
+		if (obdobi % 4 != 1)
+			count_suroviny();
+
+	}
+
+	function count_suroviny() {
+		$("#rasa_" + rok + "x" + obdobi).html($("#rasa_" + rok + "x" + (obdobi - 1)).html());
+		$("#perl_" + rok + "x" + obdobi).html($("#perl_" + rok + "x" + (obdobi - 1)).html());
+		$("#beli_" + rok + "x" + obdobi).html($("#beli_" + rok + "x" + (obdobi - 1)).html());
+		$("#stik_" + rok + "x" + obdobi).html($("#stik_" + rok + "x" + (obdobi - 1)).html());
+
+		$("#koma_" + rok + "x" + obdobi).html($("#koma_" + rok + "x" + (obdobi - 1)).html());
+		$("#zaba_" + rok + "x" + obdobi).html($("#zaba_" + rok + "x" + (obdobi - 1)).html());
+		$("#cap_" + rok + "x" + obdobi).html($("#cap_" + rok + "x" + (obdobi - 1)).html());
+
+		$("#oris_" + rok + "x" + obdobi).html($("#oris_" + rok + "x" + (obdobi - 1)).html());
+		$("#veve_" + rok + "x" + obdobi).html($("#veve_" + rok + "x" + (obdobi - 1)).html());
+		$("#kuna_" + rok + "x" + obdobi).html($("#kuna_" + rok + "x" + (obdobi - 1)).html());
+	}
+
+</script>
+<table id="plocha"></table>
+<DIV id="help">
+    <SPAN id="close_help">X</SPAN>
+    <H2>EKOSYSTÉMY</H2>
+    Texty
+</DIV>
+</body>
+</html>
+
+

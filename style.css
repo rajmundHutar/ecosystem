@@ -1,0 +1,147 @@
+BODY {
+    font-family:Verdana, Sans-Serif; 
+    background:rgb(255,165,0);
+    color:white;
+    font-size:14pt;
+}
+TABLE{
+    font-size:14pt;
+    width:100%;
+    color:black;
+}
+A{
+    color:black;
+    font-size:12pt;
+    text-decoration:none;
+    border-bottom: 2px solid black;
+    font-weight:bold;
+}
+
+A:hover{
+    color:black;
+    text-decoration:none;
+    border-bottom: 2px dashed black;
+}
+
+H1{
+    font-size:24pt;
+    text-align:center;  
+}
+H2{
+    font-size:20pt;
+    text-align:left;
+    margin: 0px 0px 10px 40px;
+}
+H3{
+    font-size:16pt;
+    text-align:left;
+    margin: 0px 0px 10px 30px;
+    text-decoration:underline;
+    font-style: italic;
+}
+H4{
+    font-size:16pt;
+    margin: 0px 0px 10px 30px;
+    text-decoration:none;
+    font-style: italic;
+}
+H5{
+    font-size:12pt;
+    font-weight:bold;
+    font-style: italic;
+    text-decoration:underline;
+    margin: 0px 0px 0px 0px;
+    display:inline;
+}
+H6{
+    font-size:12pt;
+    font-weight:bold;
+    margin: 0px 0px 0px 0px;
+    display:inline;
+}
+HR{
+    color:black;
+}
+.poznamka{
+    font-size:6pt;
+
+}
+.coef_poz{
+    font-size:10pt;
+}
+.pocet{
+    font-weight:bold;
+}
+.button_big{
+    font-size: 16pt;
+    width:40px;
+    height:40px;
+}
+.o_Jaro{
+    background-color:green;
+}
+.o_Léto{
+    background-color:yellow;
+}
+.o_Podzim{
+    background-color:brown;
+}
+.o_Zima{
+    background-color:rgb(51,102,255);
+}
+.o_pocet{
+    color:black;
+    text-decoration: underline;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+.o_name{
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    border-left: 1px solid black;    
+}
+
+.o_buttons{
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    border-right: 1px solid black;
+}
+.o_body{
+    text-align:center;
+}
+TD,TR{
+    margin: 0;
+	  padding: 0;
+    border: 0;
+    outline: 0;
+}    
+DIV#help{
+        position:absolute;
+        top:0px;
+        left:50%;
+        margin:20px 0px 0px -500px;
+        width:1000px;
+        height:80%;
+        border:1px solid green;
+        background-color: rgb(15,15,15);
+        color:white;
+        opacity: 0.8;
+        padding: 20px 20px 20px 20px;
+        text-align:justify;
+        font-size: 12pt;
+    }
+    SPAN#close_help{
+        position:absolute;
+        top:0px;
+        right:0px;
+        font-size:15pt;
+        width:30px;
+        height:30px;
+        text-align:center;
+        font-weight: bold;
+        /*border:1px solid white;*/
+    }
+    SPAN#close_help_hover{
+        background-color: rgb(15,15,15);
+    }
